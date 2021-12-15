@@ -21,11 +21,21 @@ class Module:
 
     def train(self):
         "Set the mode of this module and all descendent modules to `train`."
-        raise NotImplementedError("Need to include this file from past assignment.")
+        self.training = True
+
+        if not self.modules():
+            return
+        for module in self.modules():
+            module.train()
 
     def eval(self):
         "Set the mode of this module and all descendent modules to `eval`."
-        raise NotImplementedError("Need to include this file from past assignment.")
+        self.training = False
+
+        if not self.modules():
+            return
+        for module in self.modules():
+            module.eval()
 
     def named_parameters(self):
         """
@@ -35,11 +45,19 @@ class Module:
         Returns:
             list of pairs: Contains the name and :class:`Parameter` of each ancestor parameter.
         """
-        raise NotImplementedError("Need to include this file from past assignment.")
+        params = [[k, v] for k, v in self._parameters.items()]
+        if not self.modules():
+            return params
+        for name, module in self.__dict__["_modules"].items():
+            params_descendant = module.named_parameters()
+            for p in params_descendant:
+                p[0] = f"{name}.{p[0]}"
+            params += params_descendant
+        return params
 
     def parameters(self):
         "Enumerate over all the parameters of this module and its descendents."
-        raise NotImplementedError("Need to include this file from past assignment.")
+        return [p[1] for p in self.named_parameters()]
 
     def add_parameter(self, k, v):
         """
