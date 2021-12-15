@@ -1,6 +1,7 @@
-import minitorch
 from hypothesis import settings
 from hypothesis.strategies import composite, floats, integers, lists, permutations
+
+import minitorch
 
 settings.register_profile("ci", deadline=None)
 settings.load_profile("ci")
@@ -13,7 +14,13 @@ med_ints = integers(min_value=1, max_value=20)
 
 @composite
 def vals(draw, size, number):
-    pts = draw(lists(number, min_size=size, max_size=size,))
+    pts = draw(
+        lists(
+            number,
+            min_size=size,
+            max_size=size,
+        )
+    )
     return minitorch.tensor(pts)
 
 

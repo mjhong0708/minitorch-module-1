@@ -1,5 +1,6 @@
-import minitorch
 import pytest
+
+import minitorch
 from minitorch import History
 
 # ## Task 1.3 - Tests for the autodifferentiation machinery.
