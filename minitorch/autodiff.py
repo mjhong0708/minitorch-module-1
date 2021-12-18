@@ -208,6 +208,16 @@ class FunctionBase:
         # Implement by children class.
         raise NotImplementedError()
 
+    @staticmethod
+    def forward(ctx, *args, **kwargs):
+        # Implement by children class.
+        raise NotImplementedError()
+
+    @staticmethod
+    def backward(ctx, *args):
+        # Implement by children class.
+        raise NotImplementedError()
+
     @classmethod
     def apply(cls, *vals):
         """
@@ -271,10 +281,15 @@ class FunctionBase:
             (see `is_constant` to remove unneeded variables)
 
         """
-        # Tip: Note when implementing this function that
-        # cls.backward may return either a value or a tuple.
-        # TODO: Implement for Task 1.3.
-        raise NotImplementedError("Need to implement for Task 1.3")
+        ans = []
+        for i, val in enumerate(inputs):
+            if not is_constant(val):
+                grad = cls.backward(ctx, d_output)
+                grad = wrap_tuple(grad)
+                ans.append((val, grad[i]))
+                print(ans)
+
+        return ans
 
 
 # Algorithms for backpropagation
